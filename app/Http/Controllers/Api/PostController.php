@@ -7,26 +7,20 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use App\Http\Resources\PostCollection;
+use App\Http\Resources\Post as PostResource;
 
 class PostController extends Controller
 {
     // GET /posts
     public function index()
     {
-        $posts = Post::paginate(config('developro.paginator.posts'));
-        foreach ($posts as &$p) {
-            $p->author = $p->author;
-            $p->comments = $p->comments;
-        }
-        return new PostCollection($posts);
+        return new PostCollection(Post::paginate(config('developro.paginator.posts')));
     }
 
     // GET /posts/{post}
     public function show(Post $post)
     {
-        $post->author = $post->author;
-        $post->comments = $post->comments;
-        return $post;
+        return new PostResource($post);
     }
 
     // POST /posts

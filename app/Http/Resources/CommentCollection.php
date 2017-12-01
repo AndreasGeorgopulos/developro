@@ -14,6 +14,16 @@ class CommentCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return [
+            'data' => $this->collection->transform(function($page){
+                return [
+                    'id' => $page->id,
+                    'body' => $page->body,
+                    'created_at' => (string) $page->created_at,
+                    'updated_at' => (string) $page->updated_at,
+                    'author' => $page->author
+                ];
+            }),
+        ];
     }
 }

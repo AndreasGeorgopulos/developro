@@ -14,11 +14,7 @@ class CommentController extends Controller
     // GET /posts/{post}/comments
     public function index(Post $post)
     {
-        $comments = Comment::where('post_id', $post->id)->paginate(config('developro.paginator.comments'));
-        foreach ($comments as &$c) {
-            $c->author = $c->author;
-        }
-        return new CommentCollection($comments);
+        return new CommentCollection(Comment::where('post_id', $post->id)->paginate(config('developro.paginator.comments')));
     }
 
     // POST /posts/{post}/comments

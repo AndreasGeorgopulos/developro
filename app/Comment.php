@@ -11,7 +11,7 @@ class Comment extends Model
 
     // author attribútum
     public function getAuthorAttribute () {
-        return User::find($this->user_id);
+        return User::select(['id', 'name', 'email'])->find($this->user_id);
     }
 
     // save metódus felülírása
