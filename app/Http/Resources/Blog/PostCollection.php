@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Resources;
+namespace App\Http\Resources\Blog;
 
 use Illuminate\Http\Resources\Json\ResourceCollection;
 
@@ -14,6 +14,8 @@ class PostCollection extends ResourceCollection
      */
     public function toArray($request)
     {
-        return parent::toArray($request);
+        return $this->collection->transform(function($post){
+            return new Post($post);
+        });
     }
 }

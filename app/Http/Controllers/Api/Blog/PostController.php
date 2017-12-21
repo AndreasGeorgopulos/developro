@@ -1,13 +1,15 @@
 <?php
 
-namespace App\Http\Controllers\Api;
+namespace App\Http\Controllers\Api\Blog;
 
-use App\Post;
-use Illuminate\Http\Request;
+use App\Models\Blog\Post;
 use App\Http\Controllers\Controller;
+use App\Http\Resources\Blog\PostCollection;
+use App\Http\Resources\Blog\Post as PostResource;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
-use App\Http\Resources\PostCollection;
-use App\Http\Resources\Post as PostResource;
+use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class PostController extends Controller
 {
@@ -20,6 +22,7 @@ class PostController extends Controller
     // GET /posts/{post}
     public function show(Post $post)
     {
+        PostResource::withoutWrapping();
         return new PostResource($post);
     }
 
@@ -50,9 +53,11 @@ class PostController extends Controller
 
         $post->title = $request->get('title');
         $post->body = $request->get('body');
+        $post->slug = Str::slug($post->title);
+        if (!$post->user_id) $post->user_id = Auth::user()->id;
         $post->save();
 
-        return response()->json($post, 201);
+        return response()->json(new PostResource($post), 201);
     }
 
     private function getRules () {
